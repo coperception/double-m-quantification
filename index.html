@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Few-shot Detection w/o Fine-tuning for Autonomous Exploration">
+  <meta name="keywords" content="Few-shot detection, Online, Robotic exploration">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <title>AirDet</title> -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script> -->
+  <link rel="icon" type="image/png" href="./static/images/ai4ce.png"> 
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/ai4ce.png">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <!-- <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://jaraxxus-me.github.io/">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://ieeexplore.ieee.org/document/9561564">
+            ADTrack - ICRA 2021
+          </a>
+          <a class="navbar-item" href="https://openaccess.thecvf.com/content/ICCV2021/papers/Cao_HiFT_Hierarchical_Feature_Transformer_for_Aerial_Tracking_ICCV_2021_paper.pdf">
+            HiFT - ICCV 2021
+          </a>
+        </div>
+      </div>
+    </div> -->
+
+  </div>
+</nav>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <!-- <h1 class="title is-1 publication-title"><img src="./static/images/drone.svg" width="120">AirDet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h1> -->
+          <h1 class="title is-2 publication-title">Uncertainty Quantification of Collaborative Detection for Self-Driving</h1>
+          <div class="column is-full_width">
+            <h2 class="title is-4">Submitted to ICRA 2023</h2>
+          </div>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?hl=en&user=EWyaceAAAAAJ">Sanbao Su</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?hl=en&user=i_aajNoAAAAJ&view_op=list_works&sortby=pubdate">Yiming Li</a><sup>2</sup>,</span>
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?hl=en&user=jLLDCeoAAAAJ">Sihong He</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?hl=en&user=StIsMNgAAAAJ">Songyang Han</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?user=YeG8ZM0AAAAJ&hl=en">Chen Feng</a><sup>2</sup>
+            </span>
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?hl=en&user=7hR0r_EAAAAJ">Caiwen Ding </a><sup>1</sup>
+            </span>
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?hl=en&user=fH2YF6YAAAAJ">Fei Miao</a><sup>1</sup>
+            </span>
+
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Department of Computer Science and Engineering, University of Connecticut</span>
+          </div>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>2</sup>Tandon School of Engineering, New York University</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Video Link. -->
+              <!-- <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span> -->
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/coperception/double-m-quantification"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <!-- <span class="link-block">
+                <a href="https://github.com/Jaraxxus-Me/AirDet"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                </a>
+              </span> -->
+              <!-- <span class="link-block">
+                <a href="https://github.com/Jaraxxus-Me/AirDet_ROS"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-robot"></i>
+                  </span>
+                  <span>ROS</span>
+                </a>
+              </span> -->
+              <!-- <span class="link-block">
+                <a href="https://zhuanlan.zhihu.com/p/545249730"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-blog"></i>
+                  </span>
+                  <span>Blog</span>
+                </a>
+              </span> -->
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+
+      <img src="static\images\teaser.png" class="center"/>
+      <!-- <video id="teaser" autoplay muted loop height="100%">
+        <source src="./static/images/SUBT_video.mp4"
+                type="video/mp4">
+      </video> -->
+      <!-- <img class="rounded" src="./media/nice-slam/teaser.png" > -->
+      <br><br><br>
+      <!-- <h2 class="subtitle has-text-centered">
+        
+    </h2> -->
+    <!-- <h2 class="subtitle has-text-centered">
+      (The <span style="color:#000000;">black</span> / <span style="color:#ff0000;">red</span> lines are the ground truth / predicted camera trajectory)
+    </h2> -->
+    <h2 class="is-size-6 has-text-centered"><strong>Left</strong> figure shows detection results of intermediate collaboration in bird's eye view (BEV), and <strong>right</strong> figure zooms on a specific part to show the robust range of two detections. <span style="color:#ff0000;"><b>Red</b></span>  boxes are predictions, and <span style="color:#00CC66;"><b>green</b></span>  boxes are ground truth. The <span style="color:#FF8000;"><b>orange</b></span> ellipse denotes the covariance of each corner. The <strong>shadow convex hull</strong>  shows the uncertainty set of the detected object. The shadow convex hull covers the green bounding box in most cases, which helps the later modules in self-driving tasks, such as trajectory prediction with uncertainty propogation and robust planning and control. With our Double-M Quantification method, detected objects with low accuracy tend to have large uncertainties.</h2>
+    
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+        <!-- Paper video. -->
+        <!-- <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">Video</h2>
+            <div class="publication-video">
+              <iframe src="https://www.youtube.com/embed/V5hYTz5os0M?rel=0&amp;showinfo=0"
+                      frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div> -->
+        <!--/ Paper video. -->
+      
+    <!-- <br> -->
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Sharing information between connected and autonomous vehicles (CAVs) fundamentally improves the performance of collaborative object detection for self-driving. However, CAVs still have uncertainties on object detection due to practical challenges, which will affect the later modules in self-driving such as planning and control. Hence, uncertainty quantification is crucial for safety-critical systems such as CAVs. Our work is the first to estimate the uncertainty of collaborative object detection. We propose a novel uncertainty quantification method, called Double-M Quantification, which tailors a moving block bootstrap (MBB) algorithm with direct modeling of the multivariant Gaussian distribution of each corner of the bounding box. Our method captures both the epistemic uncertainty and aleatoric uncertainty with one inference based on the offline Double-M training process. And it can be used with different collaborative object detectors. Through experiments on the comprehensive CAVs collaborative perception dataset, we show that our Double-M method achieves up to 4.09 times improvement on uncertainty score and up to 3.13% accuracy improvement, compared with the state-of-the-art uncertainty quantification. The results also validate that sharing information between CAVs is beneficial for the system in both improving accuracy and reducing uncertainty.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- <br> -->
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Contribution</h2>
+        <div class="content has-text-justified">
+          <li>
+            To the best of our knowledge, our proposed Double-M Quantification is the first attempt to estimate the uncertainty of collaborative object detection. Our method tailors a moving block bootstrap algorithm to estimate both the epistemic and aleatoric uncertainty in one inference. 
+          </li>
+          <li>
+            We design a novel loss function and the representation format of the bounding box uncertainty in the direct modeling component to estimate the aleatoric uncertainty. 
+          </li>
+          <li>
+            We validate the advantages of the proposed methodology based on V2X-SIM [1] and show that our Double-M Quantification method reduces the uncertainty and improves the accuracy. 
+          </li>
+          <li>
+            We also show that sharing information between CAVs is beneficial for the system in both improving accuracy and reducing uncertainty. 
+          </li>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Method. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full_width">
+        <hr>
+        <h2 class="title is-3">Method</h2>
+        <br>
+        <img src="static\images\main.png" class="center"/>
+        <div class="content has-text-justified">
+          <br>  
+          <p>
+            Implementation of our Double-M Quantification method on collaborative object detection. <strong>(a) Early collaboration</strong> shares raw point cloud with other agents, and <strong>(a) intermediate collaboration</strong> shares intermediate feature representations with other agents. <strong>(c) Double-M Quantification method</strong> estimates the multi-variate Gaussian distribution of each corner.
+    Our Double-M Quantification method can be used on different collaborative object detection. During the training stage, Double-M Quantification tailors a moving block bootstrapping algorithm to get the final model parameter, the average aleatoric uncertainty of the validation dataset and the covariance of all residual vectors for epistemic uncertainty. During the inference stage, we can combine the aforementioned two covariance matrix and the predicted covariance matrix from the object detector to compute the final covariance matrix.
+          </p>
+        </div>
+      </div>
+    </div>
+    <hr>
+
+    
+    <!-- Applications.-->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full_width">
+        <h2 class="title is-3">Qualitative&nbsp;&nbsp;Results</h2>
+      </div>
+    </div>
+    <p>
+      &nbsp
+    </p>
+    <!-- <h3 class="title is-4">Attention of Detection Head</h3> -->
+    <div class="column is-full_width">
+      <img src="static\images\exp.png" class="center"/>
+      <div class="content has-text-justified">
+        <br>  
+        <p>
+          Visualization of our Double-M Quantification  results on different scenes of V2X-Sim [1]. The results of LB, DN, and UB are respectively shown in the first, second, and third row. <span style="color:#ff0000;">Red</span> boxes are predictions, and <span style="color:#00CC66;">green</span>
+boxes are ground truth. <span style="color:#FF8000;">Orange</span> ellipse denotes the covariance of each corner. We can see our Double-M Quantification predicts large <span style="color:#FF8000;">orange</span> ellipses when the differece between the <span style="color:#ff0000;">red</span> bounding box and the corresponding <span style="color:#00CC66;">green</span> bounding box is huge, which means our method is efficient. 
+
+        </p>
+        </p>
+      </div>
+    </div>
+   
+</div>
+</section>
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{Su2022arxiv,
+      author    = {Su, Sanbao and Li, Yiming and He, Sihong and Han, Songyang and Feng, Chen and Ding, Caiwen and Miao, Fei},
+      title     = {Uncertainty Quantification of Collaborative Detection for Self-Driving},
+      journal = {arxiv},
+      year      = {2022}
+  }</code></pre>
+  </div>
+</section>
+
+
+<!-- <section class="section" id="Acknowledgements">
+  <div class="container is-max-desktop content">
+    <h2 class="title">Acknowledgements</h2>
+    The work was done when Bowen Li and Pranay Reddy were interns at The Robotics Institute, CMU. The authors would like to thank all members of the Team Explorer for providing data collected from the DARPA Subterranean Challenge. Our code is built upon <a href="https://github.com/fanq15/FewX">FewX</a>, for which we sincerely express our gratitute to the authors.
+  </div>
+</section> -->
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+            This webpage template is from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>. 
+            We sincerely thank <a href="https://keunhong.com/">Keunhong Park</a> for developing and open-sourcing this template.
+          </p>
+        </div>
+      </div>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
