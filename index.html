@@ -121,7 +121,7 @@
             <div class="publication-links">
               <!-- PDF Link. -->
               <span class="link-block">
-                <a href=""
+                <a href="https://arxiv.org/pdf/2209.08162.pdf"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="fas fa-file-pdf"></i>
@@ -130,7 +130,7 @@
                 </a>
               </span>
               <span class="link-block">
-                <a href=""
+                <a href="https://arxiv.org/abs/2209.08162"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="ai ai-arxiv"></i>
@@ -288,7 +288,7 @@
         <div class="content has-text-justified">
           <br>  
           <p>
-            Implementation of our Double-M Quantification method on collaborative object detection. <strong>(a) Early collaboration</strong> shares raw point cloud with other agents, and <strong>(a) intermediate collaboration</strong> shares intermediate feature representations with other agents. <strong>(c) Double-M Quantification method</strong> estimates the multi-variate Gaussian distribution of each corner.
+            Implementation of our Double-M Quantification method on collaborative object detection. <strong>(a) Early collaboration</strong> shares raw point cloud with other agents, and <strong>(b) intermediate collaboration</strong> shares intermediate feature representations with other agents. <strong>(c) Double-M Quantification method</strong> estimates the multi-variate Gaussian distribution of each corner.
     Our Double-M Quantification method can be used on different collaborative object detection. During the training stage, Double-M Quantification tailors a moving block bootstrapping algorithm to get the final model parameter, the average aleatoric uncertainty of the validation dataset and the covariance of all residual vectors for epistemic uncertainty. During the inference stage, we can combine the aforementioned two covariance matrix and the predicted covariance matrix from the object detector to compute the final covariance matrix.
           </p>
         </div>
@@ -327,11 +327,12 @@ boxes are ground truth. <span style="color:#FF8000;">Orange</span> ellipse denot
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
     <h2 class="title">BibTeX</h2>
-    <pre><code>@article{Su2022arxiv,
+    <pre><code>@article{Su2022uncertainty,
       author    = {Su, Sanbao and Li, Yiming and He, Sihong and Han, Songyang and Feng, Chen and Ding, Caiwen and Miao, Fei},
       title     = {Uncertainty Quantification of Collaborative Detection for Self-Driving},
-      journal = {arxiv},
-      year      = {2022}
+      year={2022},
+      eprint={2209.08162},
+      archivePrefix={arXiv}
   }</code></pre>
   </div>
 </section>
