@@ -1,5 +1,5 @@
 # Double-M-Uncertainty-Quantification
-Implementation of paper "Uncertainty Quantification of Collaborative Detection for Self-Driving"
+Implementation of paper "Uncertainty Quantification of Collaborative Detection for Self-Driving" [paper](https://arxiv.org/abs/2209.08162), [website](https://coperception.github.io/double-m-quantification/)
 
 ## Install:
 1. Clone this repository.
