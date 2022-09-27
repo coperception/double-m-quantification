@@ -24,9 +24,9 @@ com := disco
 batch_size := 1
 # [train / test / val]
 split := train
-# Where to store the logs check_loss_base, check_loss_mbb, check_loss_two_step_corner_pair_ind, check_loss_mbb_two_step_corner_pair_ind 
-logpath := check/check_loss_mbb_two_step_corner_pair_ind
-testlogpath := check/test_loss_mbb_two_step_corner_pair_ind
+# Where to store the logs
+logpath := check/check_loss_base
+testlogpath := check/test_loss_corner_pair_ind
 # Train for how many epochs
 nepoch := 25
 # loss type: corner_loss faf_loss kl_loss_center kl_loss_center_add, kl_loss_corner, kl_loss_center_ind, kl_loss_center_offset_ind, kl_loss_corner_pair_ind 
@@ -54,8 +54,6 @@ warp_flag := 0
 inference := activated
 #block len for MBB method
 block_len := 16
-# Whether to use wandb to record parameters and loss
-use_wandb := 1
 
 create_data:
 	python create_data_det.py \
@@ -81,7 +79,6 @@ train:
 	--compress_level $(compress_level) \
 	--pose_noise $(pose_noise) \
 	--only_v2i $(only_v2i) \
-	--use_wandb $(use_wandb) \
 	--loss_type $(loss_type) \
 	--exp_name $(exp_name)
 
@@ -116,7 +113,6 @@ train_disco_no_rsu:
 	--pose_noise $(pose_noise) \
 	--only_v2i $(only_v2i) \
 	--rsu 0 \
-	--use_wandb $(use_wandb) \
 	--loss_type $(loss_type) \
 	--exp_name $(exp_name)
     
@@ -138,7 +134,6 @@ mbb_train:
 	--init_resume_path check/check_loss_base/$(com)/no_rsu/epoch_80.pth \
 	--test_store $(logpath)/$(com)/no_rsu \
 	--test_data $(testing_data) \
-	--use_wandb $(use_wandb) \
 	--loss_type $(loss_type) \
 	--exp_name $(exp_name) \
 	--test
@@ -161,9 +156,9 @@ mbb_train_disco_no_rsu:
 	--init_resume_path check/check_loss_base/disco/no_rsu/epoch_80.pth \
 	--test_store $(logpath)/disco/no_rsu \
 	--test_data $(testing_data) \
-	--use_wandb $(use_wandb) \
 	--loss_type $(loss_type) \
-	--exp_name $(exp_name)
+	--exp_name $(exp_name) \
+	--test
     
 test:
 	python $(testing_script) \
@@ -205,50 +200,18 @@ mbb_test_no_rsu:
 	--warp_flag $(warp_flag) \
 	--rsu 0 \
 	--test_store $(logpath)/$(com)/no_rsu \
-	--init_resume_path check/check_loss_two_step_corner_pair_ind/$(com)/no_rsu/epoch_80.pth \
+	--init_resume_path check/check_loss_base/$(com)/no_rsu/epoch_80.pth \
 	--nepoch ${nepoch} \
-	--use_wandb $(use_wandb) \
 	--loss_type $(loss_type) \
 	--exp_name $(exp_name)
     
 #testlogpath, logpath
 prob_measure:
 	python prob_measure.py \
-	--resume $(testlogpath)/${com}/no_rsu/$(nepoch)/all_data.npy \
-	--nepoch $(nepoch) \
-	--type 1 \
-	--save_path $(testlogpath)/${com}/no_rsu/$(nepoch) \
-	--covar_path $(logpath)/${com}/no_rsu/mbb_covar_00.npy \
-	--exp_name new_eq_00_$(testlogpath)/${com}
-    
-prob_measure_2:
-	python prob_measure.py \
-	--resume check/train_loss_mbb_two_step_corner_pair_ind/${com}/no_rsu/all_data_23.npy \
-	--nepoch $(nepoch) \
-	--type 1 \
-	--save_path $(testlogpath)/${com}/no_rsu \
-	--covar_path $(logpath)/${com}/no_rsu/mbb_covar_05.npy \
-	--exp_name train_new_eq_train_loss_mbb_two_step_corner_pair_ind/${com}
-
-prob_measure_one:
-	python prob_measure.py \
-	--resume check/check_loss_two_step_corner_pair_ind/${com}/no_rsu/all_data_80.npy \
-	--nepoch $(nepoch) \
-	--type 0
-    
-prob_measure_one_with_mbb:
-	python prob_measure.py \
-	--resume $(testlogpath)/${com}/no_rsu/$(nepoch)/all_data.npy \
-	--nepoch $(nepoch) \
-	--covar_path $(logpath)/${com}/no_rsu/mbb_covar_05.npy \
+	--resume $(logpath)/${com}/no_rsu/all_data.npy \
+	--covar_path $(logpath)/${com}/no_rsu/mbb_covar.npy \
 	--type 0
 
-prob_measure_mbb:
-	python prob_measure.py \
-	--resume check/test_loss_mbb/${com}/no_rsu/$(nepoch)/all_data.npy \
-	--nepoch $(nepoch) \
-	--type 2 \
-	--covar_path $(logpath)/${com}/no_rsu/mbb_covar_05.npy \
     
 compute_mbb_covar:
 	python compute_mbb_covar.py \

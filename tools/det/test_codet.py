@@ -619,8 +619,6 @@ if __name__ == "__main__":
         type=str,
         help="corner_loss, faf_loss, kl_loss_center, kl_loss_center_add",
     )
-    parser.add_argument("--use_wandb", default=0, type=int, help="Whether to use wandb to record parameters and loss")
-
     torch.multiprocessing.set_sharing_strategy("file_system")
     args = parser.parse_args()
     print(args)

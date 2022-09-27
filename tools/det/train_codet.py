@@ -268,8 +268,6 @@ def main(args):
 
         print("Load model from {}, at epoch {}".format(args.resume, start_epoch - 1))
     num_step = 0
-    if args.use_wandb:
-        wandb.watch(faf_module.model, log="all")
     # Try freeze part of model
     if False:
         for name, param in faf_module.model.named_parameters():
@@ -365,10 +363,6 @@ def main(args):
             t.set_postfix(
                 cls_loss=running_loss_class.avg, loc_loss=running_loss_loc.avg
             )
-            if args.use_wandb:
-                num_step = num_step + 1
-                wandb.log({"loss":loss, "cls_loss": cls_loss, "loc_loss": loc_loss, "running_loss_disp":running_loss_disp.avg, "running_loss_class:":running_loss_class.avg, \
-                           "running_loss_loc": running_loss_loc.avg, "epoch":epoch}, step=num_step)
 
         faf_module.scheduler.step()
 
@@ -499,7 +493,6 @@ if __name__ == "__main__":
         type=str,
         help="corner_loss faf_loss kl_loss_center kl_loss_center_add, kl_loss_corner, kl_loss_center_ind, kl_loss_center_offset_ind, kl_loss_corner_pair_ind",
     )
-    parser.add_argument("--use_wandb", default=0, type=int, help="Whether to use wandb to record parameters and loss")
     parser.add_argument(
         "--exp_name",
         default="exp",
@@ -510,18 +503,4 @@ if __name__ == "__main__":
     torch.multiprocessing.set_sharing_strategy("file_system")
     args = parser.parse_args()
     print(args)
-    if args.use_wandb:
-        run_dir = "./" + args.logpath + "/" + args.com + "/no_rsu/wandb"
-        if not os.path.exists(run_dir):
-            os.makedirs(run_dir)
-        wandb.init(config=args,
-               project="kl_loss",
-               entity="susanbao",
-               notes=socket.gethostname(),
-               name=str(args.com) + "_"+ args.exp_name +"_"+ str(args.loss_type) + "_" + str(args.nepoch),
-               dir=run_dir,
-               job_type="training",
-               reinit=True)
     main(args)
-    if args.use_wandb:
-        wandb.finish()

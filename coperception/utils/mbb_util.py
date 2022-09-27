@@ -25,8 +25,6 @@ def check_folder(folder_path):
     return folder_path
 
 def test_model(fafmodule, validation_data_loader, flag, device, config, epoch, args):
-    if args.use_wandb:
-        wandb.log({"epoch":epoch}, step=epoch)
     fafmodule.model.eval()
     num_agent = args.num_agent
     apply_late_fusion = args.apply_late_fusion
@@ -324,5 +322,3 @@ def test_model(fafmodule, validation_data_loader, flag, device, config, epoch, a
             mean_ap_all[0], mean_ap_all[1]
         )
     )
-    if args.use_wandb:
-        wandb.log({"AP@0.5":mean_ap_all[0], "AP@0.7": mean_ap_all[1]}, step=epoch)

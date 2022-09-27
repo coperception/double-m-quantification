@@ -44,16 +44,11 @@ class DetModelBase(nn.Module):
         self.anchor_num_per_loc = len(config.anchor_size)
         self.classification = ClassificationHead(config)
         self.regression = SingleRegressionHead(config)
-        self.oneStepTrain = False
         self.regMeanCovToge = config.regMeanCovToge
-        # only for one step training
-        if self.oneStepTrain:
-            self.covariance = RegressionCovarianceHead(config)
-        else:
-            self.centerReg = CenterRegressionHead(config)
-            self.centerIndReg = CenterIndRegressionHead(config)
-            self.cornerIndReg = CornerIndRegressionHead(config)
-            self.cornerPairIndReg = CornerPairIndRegressionHead(config)
+        self.centerReg = CenterRegressionHead(config)
+        self.centerIndReg = CenterIndRegressionHead(config)
+        self.cornerIndReg = CornerIndRegressionHead(config)
+        self.cornerPairIndReg = CornerPairIndRegressionHead(config)
         self.agent_num = num_agent
         self.kd_flag = kd_flag
         self.layer = layer
@@ -271,10 +266,7 @@ class DetModelBase(nn.Module):
         result = {"loc": loc_preds, "cls": cls_preds}
 
         # location covariance pred
-        # only for one step training
-        if self.oneStepTrain and self.loss_type != "corner_loss":
-            covRegHead = self.covariance
-        elif self.loss_type == "kl_loss_center":
+        if self.loss_type == "kl_loss_center":
             covRegHead = self.centerReg
         elif self.loss_type == "kl_loss_center_ind" or self.loss_type == "kl_loss_center_offset_ind":
             covRegHead = self.centerIndReg
