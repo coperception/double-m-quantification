@@ -59,13 +59,6 @@ Train benchmark detectors:
     CUDA_VISIBLE_DEVICES=0 make test_no_rsu com=upperbound loss_type=kl_loss_corner_pair_ind logpath=check/check_loss_corner_pair_ind nepoch=25
 ```
 
-### Compute NLL:
-Train benchmark detectors:
-- Lowerbound / Upperbound/ DiscoNet
-```bash
-    CUDA_VISIBLE_DEVICES=0 make prob_measure com=upperbound logpath=check/check_loss_corner_pair_ind
-```
-
 ## Related works:
 - [coperception Github repo](https://github.com/coperception/coperception)
 
