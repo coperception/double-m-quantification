@@ -172,6 +172,7 @@ test:
 	--inference $(inference) \
 	--warp_flag $(warp_flag) \
 	--rsu 1 \
+	--covar_path $(logpath)/${com}/no_rsu/mbb_covar.npy \
 	--loss_type $(loss_type)
 
 test_no_rsu:
@@ -185,36 +186,5 @@ test_no_rsu:
 	--inference $(inference) \
 	--warp_flag $(warp_flag) \
 	--rsu 0 \
-	--loss_type $(loss_type)
-
-mbb_test_no_rsu:
-	python test_mbb.py \
-	--data $(testing_data) \
-	--com $(com) \
-	--resume $(logpath)/$(com)/no_rsu \
-	--tracking \
-	--logpath $(logpath)/${com}/no_rsu \
-	--apply_late_fusion $(apply_late_fusion) \
-	--visualization $(visualization) \
-	--inference $(inference) \
-	--warp_flag $(warp_flag) \
-	--rsu 0 \
-	--test_store $(logpath)/$(com)/no_rsu \
-	--init_resume_path check/check_loss_base/$(com)/no_rsu/epoch_80.pth \
-	--nepoch ${nepoch} \
-	--loss_type $(loss_type) \
-	--exp_name $(exp_name)
-    
-#testlogpath, logpath
-prob_measure:
-	python prob_measure.py \
-	--resume $(logpath)/${com}/no_rsu/all_data.npy \
 	--covar_path $(logpath)/${com}/no_rsu/mbb_covar.npy \
-	--type 0
-
-    
-compute_mbb_covar:
-	python compute_mbb_covar.py \
-	--mbb_path $(logpath)/${com}/no_rsu \
-	--min_epoch 0 \
-	--max_epoch $(nepoch)
+	--loss_type $(loss_type)
