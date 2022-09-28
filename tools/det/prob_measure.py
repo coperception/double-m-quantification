@@ -14,8 +14,6 @@ from coperception.utils.mean_ap import eval_map, eval_nll
 from coperception.models.det import *
 from coperception.utils.detection_util import late_fusion
 from coperception.utils.data_util import apply_pose_noise
-import ipdb
-import wandb
 import socket
 
 def check_folder(folder_path):
@@ -70,19 +68,7 @@ def compute_null_with_different_weight(args):
     print(covar_e)
     print("covar_a")
     print(covar_a)
-    
-    #save with wandb
-    wandb_path = args.save_path + "/wandb"
-    if not os.path.exists(wandb_path):
-        os.makedirs(wandb_path)
-    wandb.init(config=args,
-            project="nll_weight_new",
-            entity="susanbao",
-            notes=socket.gethostname(),
-            name=args.exp_name,
-            dir=wandb_path,
-            job_type="testing",
-            reinit=True)
+
     
     #w_list = np.arange(0.0, 30.0, 0.5)
     w_list = np.arange(0.0, 1.05, 0.05)
@@ -94,13 +80,11 @@ def compute_null_with_different_weight(args):
         covar_nll_05 = eval_nll(det_results_all_local, annotations_all_local, scale_ranges=None, iou_thr=0.5, covar_e = covar_e, covar_a=covar_a, w=w)
         nll_list_05.append(covar_nll_05[0]['NLL'])
         covar_nll_07 = eval_nll(det_results_all_local, annotations_all_local, scale_ranges=None, iou_thr=0.7, covar_e = covar_e, covar_a=covar_a, w=w)
-        wandb.log({"NLL_0.5": covar_nll_05[0]['NLL'], "NLL_0.7": covar_nll_07[0]['NLL'], "w": w}, step=index)
         nll_list_07.append(covar_nll_07[0]['NLL'])
     save_data = {"nll_list_05": nll_list_05, "nll_list_07": nll_list_07, "w_list":w_list}
     save_data_path = args.save_path + "/nll_list.npy"
     np.save(save_data_path, save_data)
     print("Complete save computed NLLs in {}".format(save_data_path))
-    wandb.finish()
 
 def compute_nll_only_with_mbb(args):
     covar_data = np.load(args.covar_path, allow_pickle=True)

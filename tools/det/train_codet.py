@@ -15,10 +15,6 @@ from coperception.utils.data_util import apply_pose_noise
 
 import glob
 import os
-import ipdb
-import wandb
-import socket
-import ipdb
 
 def check_folder(folder_path):
     if not os.path.exists(folder_path):

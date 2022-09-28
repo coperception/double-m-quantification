@@ -17,7 +17,6 @@ from coperception.utils.mean_ap import eval_map
 
 import glob
 import os
-import wandb
 
 def check_folder(folder_path):
     if not os.path.exists(folder_path):
@@ -179,44 +178,6 @@ def test_model(fafmodule, validation_data_loader, flag, device, config, epoch, a
                     os.path.join(seq_save, idx_save),
                 )
 
-            scene, frame = filename.split("/")[-2].split("_")
-            npy_frame_name = filename.split("/")[-2] + ".npy"
-            npy_frame_file = os.path.join(tracking_path[k], npy_frame_name)
-            det_res = {"scene" : scene, "frame": frame, "det_results_frame": det_results_frame, "annotations_frame": annotations_frame}
-            np.save(npy_frame_file, det_res)
-            """
-            det_file = os.path.join(tracking_path[k], f"det_{scene}.txt")
-            if scene not in tracking_file[k]:
-                det_file = open(det_file, "w")
-                tracking_file[k].add(scene)
-            else:
-                det_file = open(det_file, "a")
-            det_corners = get_det_corners(config, temp_)
-            for ic, c in enumerate(det_corners):
-                det_file.write(
-                    ",".join(
-                        [
-                            str(
-                                int(frame) + 1
-                            ),  # frame idx is 1-based for tracking
-                            "-1",
-                            "{:.2f}".format(c[0]),
-                            "{:.2f}".format(c[1]),
-                            "{:.2f}".format(c[2]),
-                            "{:.2f}".format(c[3]),
-                            str(result_temp[0][0][0]["score"][ic]),
-                            "-1",
-                            "-1",
-                            "-1",
-                        ]
-                    )
-                    + "\n"
-                )
-                det_file.flush()
-
-            det_file.close()
-            """
-
             # restore data before late-fusion
             if apply_late_fusion == 1 and len(result[k]) != 0:
                 result[k][0][0][0]["pred"] = pred_restore
@@ -270,9 +231,6 @@ def test_model(fafmodule, validation_data_loader, flag, device, config, epoch, a
 
         det_results_all_local += det_results_local[k]
         annotations_all_local += annotations_local[k]
-        npy_frame_file = os.path.join(tracking_path[k], "one_agent_data.npy")
-        det_res = {"agent" : k+1, "det_results_frame": det_results_local[k], "annotations_frame": annotations_local[k]}
-        np.save(npy_frame_file, det_res)
 
     npy_frame_file = os.path.join(save_epoch_path, "all_data.npy")
     det_res = {"det_results_frame": det_results_all_local, "annotations_frame": annotations_all_local}
@@ -300,10 +258,6 @@ def test_model(fafmodule, validation_data_loader, flag, device, config, epoch, a
     mean_ap_agents.append(mean_ap_5)
     mean_ap_agents.append(mean_ap_7)
 
-    mean_ap_file = os.path.join(save_epoch_path, "all_mean_ap.npy")
-    mean_ap_res = {"agents": mean_ap_agents, "all": mean_ap_all}
-    np.save(mean_ap_file, mean_ap_res)
-
     print_and_write_log(
         "Quantitative evaluation results of model from {}, at epoch {}".format(
             args.resume, epoch
@@ -322,3 +276,44 @@ def test_model(fafmodule, validation_data_loader, flag, device, config, epoch, a
             mean_ap_all[0], mean_ap_all[1]
         )
     )
+
+def computer_mbb_covar(args):
+    start_epoch = 0
+    end_epoch = args.nepoch
+    res_diff = []
+    all_predicted_covariance = []
+    covar_flag = False
+    iou_thr = 0.5
+    for epoch in range(start_epoch, end_epoch+1):
+        data_path = args.test_store + "/{}".format(epoch) +"/all_data.npy"
+        print("Load data from {}".format(data_path))
+        data = np.load(data_path, allow_pickle=True)
+        det_results_all_local = data.item()['det_results_frame']
+        annotations_all_local = data.item()['annotations_frame']
+        res_diff_one_epoch, predicted_covar = get_residual_error_and_cov(det_results_all_local, annotations_all_local, scale_ranges=None, iou_thr=iou_thr)
+        res_diff.extend(res_diff_one_epoch)
+        if predicted_covar != None:
+            all_predicted_covariance.extend(predicted_covar)
+            covar_flag = True
+        print("Number of corners of all bounding box: {}".format(len(res_diff[epoch])))
+    res_diff_np = np.array(res_diff[0])
+    if covar_flag:
+        all_predicted_covariance_np = np.array(all_predicted_covariance[0])
+    for i in range(1, len(res_diff)):
+        res_diff_np = np.concatenate((res_diff_np, res_diff[i]))
+        if covar_flag:
+            all_predicted_covariance_np = np.concatenate((all_predicted_covariance_np, all_predicted_covariance[i]))
+    print(res_diff_np.shape)
+    print("covariance matrix for residual error:")
+    covar_e = np.cov(res_diff_np.T)
+    print(covar_e)
+    save_data = {"covar_e":covar_e}
+    if covar_flag:
+        print(all_predicted_covariance_np.shape)
+        print("mean of predicted covariance matrix:")
+        covar_a = np.mean(all_predicted_covariance_np, axis=0)
+        print(covar_a)
+        save_data['covar_a'] =  covar_a
+    save_data_path = args.test_store + "/mbb_covar.npy"
+    np.save(save_data_path, save_data)
+    print("Save computed covariance in {}".format(save_data_path))

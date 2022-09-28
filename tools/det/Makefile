@@ -133,7 +133,7 @@ mbb_train:
 	--block_len $(block_len) \
 	--init_resume_path check/check_loss_base/$(com)/no_rsu/epoch_80.pth \
 	--test_store $(logpath)/$(com)/no_rsu \
-	--test_data $(testing_data) \
+	--test_data $(create_data_save_path) \
 	--loss_type $(loss_type) \
 	--exp_name $(exp_name) \
 	--test
@@ -155,7 +155,7 @@ mbb_train_disco_no_rsu:
 	--block_len $(block_len) \
 	--init_resume_path check/check_loss_base/disco/no_rsu/epoch_80.pth \
 	--test_store $(logpath)/disco/no_rsu \
-	--test_data $(testing_data) \
+	--test_data $(create_data_save_path) \
 	--loss_type $(loss_type) \
 	--exp_name $(exp_name) \
 	--test

@@ -13,14 +13,11 @@ from coperception.utils.loss import *
 from coperception.models.det import *
 from coperception.utils import AverageMeter
 from coperception.utils.data_util import apply_pose_noise
-from coperception.utils.mean_ap import eval_map
-from coperception.utils.mbb_util import test_model
+from coperception.utils.mean_ap import eval_map, get_residual_error_and_cov
+from coperception.utils.mbb_util import test_model, computer_mbb_covar
 
 import glob
 import os
-import ipdb
-import wandb
-import socket
 
 
 def check_folder(folder_path):
@@ -87,7 +84,7 @@ def main(args):
     print("Training dataset size:", len(training_dataset))
     if args.test:
         validation_dataset = V2XSimDet(
-            dataset_roots=[f"{args.test_data}/agent{i}" for i in agent_idx_range],
+            dataset_roots=[f"{args.test_data}/val/agent{i}" for i in agent_idx_range],
             config=config,
             config_global=config_global,
             split="val",
@@ -301,12 +298,6 @@ def main(args):
 
         print("Load model from {}, at epoch {}".format(args.resume, start_epoch - 1))
  
-    num_step = 0
-    # Try freeze part of model
-    if False:
-        for name, param in faf_module.model.named_parameters():
-            if name.split('.')[1] != 'cornerPairIndReg':
-                param.requires_grad = False
     for epoch in range(start_epoch, num_epochs + 1):
         lr = faf_module.optimizer.param_groups[0]["lr"]
         print("Epoch {}, learning rate {}".format(epoch, lr))
@@ -435,6 +426,8 @@ def main(args):
 
     if need_log:
         saver.close()
+
+    computer_mbb_covar(args)
 
 
 if __name__ == "__main__":

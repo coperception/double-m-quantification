@@ -15,9 +15,6 @@ from coperception.models.det import *
 from coperception.utils.detection_util import late_fusion
 from coperception.utils.data_util import apply_pose_noise
 from coperception.utils.mbb_util import test_model
-import ipdb
-import wandb
-import socket
 
 
 def check_folder(folder_path):
