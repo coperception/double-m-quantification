@@ -45,7 +45,7 @@ def main(args):
         covar_a = np.mean(all_predicted_covariance_np, axis=0)
         print(covar_a)
         save_data['covar_a'] =  covar_a
-    save_data_path = args.mbb_path + "/mbb_covar_01.npy"
+    save_data_path = args.mbb_path + "/mbb_covar.npy"
     np.save(save_data_path, save_data)
     print("Save computed covariance in {}".format(save_data_path))
 
