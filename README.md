@@ -18,6 +18,10 @@ Download dataset:
 
 ## Training
 
+```bash
+  cd ./tools/det/
+```
+
 ### Pretrain stage:
 
 Train benchmark detectors:
