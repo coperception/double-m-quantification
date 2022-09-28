@@ -485,7 +485,7 @@ def main(args):
     #if args.loss_type == "kl_loss_corner_pair_ind":
     #    covar_nll = eval_nll(det_results_all_local, annotations_all_local, scale_ranges=None, iou_thr=0.5)
     #    print(covar_nll)
-    npy_frame_file = os.path.join(model_save_path, "all_data_{}.npy".format(start_epoch - 1))
+    npy_frame_file = os.path.join(model_save_path, "all_data.npy")
     det_res = {"det_results_frame": det_results_all_local, "annotations_frame": annotations_all_local}
     np.save(npy_frame_file, det_res)
     mean_ap_local_average, _ = eval_map(

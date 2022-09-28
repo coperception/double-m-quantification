@@ -13,7 +13,7 @@ from coperception.utils.loss import *
 from coperception.models.det import *
 from coperception.utils import AverageMeter
 from coperception.utils.data_util import apply_pose_noise
-from coperception.utils.mean_ap import eval_map
+from coperception.utils.mean_ap import eval_map, get_residual_error_and_cov
 
 import glob
 import os
@@ -259,17 +259,10 @@ def test_model(fafmodule, validation_data_loader, flag, device, config, epoch, a
     mean_ap_agents.append(mean_ap_7)
 
     print_and_write_log(
-        "Quantitative evaluation results of model from {}, at epoch {}".format(
-            args.resume, epoch
+        "Quantitative evaluation results of model, at epoch {}".format(
+             epoch
         )
     )
-
-    for k in range(eval_start_idx, num_agent):
-        print_and_write_log(
-            "agent{} mAP@0.5 is {} and mAP@0.7 is {}".format(
-                k + 1 if not args.rsu else k, mean_ap_5[k], mean_ap_7[k]
-            )
-        )
 
     print_and_write_log(
         "average local mAP@0.5 is {} and average local mAP@0.7 is {}".format(

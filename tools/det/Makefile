@@ -2,7 +2,7 @@
 original_data_path := /data/v2x-sim
 # Where to save the created data
 #V2X-Sim-det  V2X-Sim-demo
-create_data_save_path := /data/v2x-sim-nyu/V2X-Sim-det
+create_data_save_path := /data/v2x-sim-nyu/V2X-Sim-demo
 # Index of the begining scene
 scene_begin := 0
  # Index of the ending scene + 1
@@ -131,7 +131,7 @@ mbb_train:
 	--pose_noise $(pose_noise) \
 	--only_v2i $(only_v2i) \
 	--block_len $(block_len) \
-	--init_resume_path check/check_loss_base/$(com)/no_rsu/epoch_80.pth \
+	--init_resume_path check/check_loss_base/$(com)/no_rsu/epoch_1.pth \
 	--test_store $(logpath)/$(com)/no_rsu \
 	--test_data $(create_data_save_path) \
 	--loss_type $(loss_type) \
