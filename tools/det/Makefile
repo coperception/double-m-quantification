@@ -105,7 +105,7 @@ train_disco_no_rsu:
 	--com disco \
 	--log --batch $(batch_size) \
 	--kd_flag 1 \
-	--resume_teacher check/check_loss_base/upperbound/no_rsu/epoch_90.pth \
+	--resume_teacher check/check_loss_base/upperbound/no_rsu/epoch_100.pth \
 	--auto_resume_path $(auto_resume_path) \
 	--logpath $(logpath) \
 	--nepoch $(nepoch) \
