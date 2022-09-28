@@ -14,7 +14,6 @@ from coperception.utils.mean_ap import eval_map, eval_nll
 from coperception.models.det import *
 from coperception.utils.detection_util import late_fusion
 from coperception.utils.data_util import apply_pose_noise
-import ipdb
 
 
 def check_folder(folder_path):
@@ -22,6 +21,21 @@ def check_folder(folder_path):
         os.mkdir(folder_path)
     return folder_path
 
+def compute_nll(args, det_results_all_local, annotations_all_local):
+    if args.covar_path != "":
+        covar_data = np.load(args.covar_path, allow_pickle=True)
+        covar_e = covar_data.item()['covar_e']
+        covar_a = covar_data.item()['covar_a']
+        covar_e = torch.from_numpy(covar_e)
+        covar_a = torch.from_numpy(covar_a)
+    else:
+        covar_a = None
+        covar_e = None
+    iou_list = [0.5, 0.7]
+    for i in iou_list:
+        print("NLL with {}:".format(i))
+        covar_nll = eval_nll(det_results_all_local, annotations_all_local, scale_ranges=None, iou_thr=i, covar_e = covar_e, covar_a=covar_a)
+        print(covar_nll)
 
 @torch.no_grad()
 def main(args):
@@ -333,13 +347,6 @@ def main(args):
             det_results_local[k], annotations_local[k], det_results_frame, annotations_frame = cal_local_mAP(
                 config, temp, det_results_local[k], annotations_local[k], True
             )
-            """
-            print("det_results_local[k]:")
-            print(det_results_local[k])
-            print("annotations_local[k]:")
-            print(annotations_local[k])
-            exit()
-            """
 
             filename = str(filename0[0][0])
             cut = filename[filename.rfind("agent") + 7 :]
@@ -363,18 +370,6 @@ def main(args):
             npy_frame_file = os.path.join(result_path[k], npy_frame_name)
             det_res = {"scene" : scene, "frame": frame, "det_results_frame": det_results_frame, "annotations_frame": annotations_frame}
             np.save(npy_frame_file, det_res)
-
-            # # plot the cell-wise edge
-            # if flag == "disco" and k < len(save_agent_weight_list):
-            #     one_agent_edge = save_agent_weight_list[k]
-            #     for kk in range(len(one_agent_edge)):
-            #         idx_edge_save = (
-            #             str(idx) + "_edge_" + str(kk) + "_to_" + str(k) + ".png"
-            #         )
-            #         savename_edge = os.path.join(seq_save, idx_edge_save)
-            #         sns.set()
-            #         plt.savefig(savename_edge, dpi=500)
-            #         plt.close(0)
 
             # == tracking ==
             if args.tracking:
@@ -435,7 +430,6 @@ def main(args):
     # local mAP evaluation
     det_results_all_local = []
     annotations_all_local = []
-    #ipdb.set_trace()
     for k in range(eval_start_idx, num_agent):
         if type(det_results_local[k]) != list or len(det_results_local[k]) == 0:
             continue
@@ -449,9 +443,6 @@ def main(args):
             logger=None,
         )
         mean_ap_local.append(mean_ap)
-        #if args.loss_type == "kl_loss_corner_pair_ind":
-        #    covar_nll = eval_nll(det_results_local[k], annotations_local[k], scale_ranges=None, iou_thr=0.5)
-        #    print(covar_nll)
         print_and_write_log("Local mAP@0.7 from agent {}".format(k))
 
         ean_ap, _ = eval_map(
@@ -463,9 +454,6 @@ def main(args):
             logger=None,
         )
         mean_ap_local.append(mean_ap)
-        #if args.loss_type == "kl_loss_corner_pair_ind":
-        #    covar_nll = eval_nll(det_results_local[k], annotations_local[k], scale_ranges=None, iou_thr=0.7)
-        #    print(covar_nll)
 
         det_results_all_local += det_results_local[k]
         annotations_all_local += annotations_local[k]
@@ -482,9 +470,6 @@ def main(args):
         logger=None,
     )
     mean_ap_local.append(mean_ap_local_average)
-    #if args.loss_type == "kl_loss_corner_pair_ind":
-    #    covar_nll = eval_nll(det_results_all_local, annotations_all_local, scale_ranges=None, iou_thr=0.5)
-    #    print(covar_nll)
     npy_frame_file = os.path.join(model_save_path, "all_data.npy")
     det_res = {"det_results_frame": det_results_all_local, "annotations_frame": annotations_all_local}
     np.save(npy_frame_file, det_res)
@@ -497,9 +482,6 @@ def main(args):
         logger=None,
     )
     mean_ap_local.append(mean_ap_local_average)
-    #if args.loss_type == "kl_loss_corner_pair_ind":
-    #    covar_nll = eval_nll(det_results_all_local, annotations_all_local, scale_ranges=None, iou_thr=0.7)
-    #    print(covar_nll)
 
     print_and_write_log(
         "Quantitative evaluation results of model from {}, at epoch {}".format(
@@ -519,6 +501,7 @@ def main(args):
             mean_ap_local[-2], mean_ap_local[-1]
         )
     )
+    compute_nll(args, det_results_all_local, annotations_all_local)
 
     if need_log:
         saver.close()
@@ -618,6 +601,12 @@ if __name__ == "__main__":
         default="corner_loss",
         type=str,
         help="corner_loss, faf_loss, kl_loss_center, kl_loss_center_add",
+    )
+    parser.add_argument(
+        "--covar_path",
+        default="",
+        type=str,
+        help="The path of saving the computed covariance matrix from mbb",
     )
     torch.multiprocessing.set_sharing_strategy("file_system")
     args = parser.parse_args()
