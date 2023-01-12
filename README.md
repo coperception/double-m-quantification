@@ -50,9 +50,17 @@ Train benchmark detectors:
     CUDA_VISIBLE_DEVICES=0 make mbb_train_disco_no_rsu loss_type=kl_loss_corner_pair_ind logpath=check/check_loss_corner_pair_ind nepoch=25
 ```
 
+Compute the covariance for MBB
+```bash
+CUDA_VISIBLE_DEVICES=0 make mbb_test_no_rsu com=upperbound loss_type=kl_loss_corner_pair_ind logpath=check/check_loss_corner_pair_ind nepoch=25 
+CUDA_VISIBLE_DEVICES=0 make compute_mbb_covar com=upperbound logpath=check/check_loss_corner_pair_ind
+```
+
 ## Test:
 
 ### Test stage:
+
+
 Train benchmark detectors:
 - Lowerbound / Upperbound/ DiscoNet
 ```bash

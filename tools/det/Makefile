@@ -19,6 +19,7 @@ training_data := $(create_data_save_path)/train
 testing_script := test_codet.py
 # Path to the test/val data
 testing_data := $(create_data_save_path)/test
+val_data := $(create_data_save_path)/val
 # [lowerbound / upperbound / v2v / disco / when2com / max / mean / sum / agent]
 com := disco
 batch_size := 1
@@ -188,3 +189,25 @@ test_no_rsu:
 	--rsu 0 \
 	--covar_path $(logpath)/${com}/no_rsu/mbb_covar.npy \
 	--loss_type $(loss_type)
+
+mbb_test_no_rsu:
+	python test_mbb.py \
+	--data $(val_data) \
+	--com $(com) \
+	--resume $(logpath)/$(com)/no_rsu \
+	--logpath $(logpath)/${com}/no_rsu \
+	--apply_late_fusion $(apply_late_fusion) \
+	--visualization $(visualization) \
+	--inference $(inference) \
+	--warp_flag $(warp_flag) \
+	--rsu 0 \
+	--test_store $(logpath)/$(com)/no_rsu \
+	--init_resume_path check/check_loss_base/$(com)/no_rsu/epoch_80.pth \
+	--nepoch ${nepoch} \
+	--loss_type $(loss_type)
+
+compute_mbb_covar:
+	python compute_mbb_covar.py \
+	--mbb_path $(logpath)/${com}/no_rsu \
+	--min_epoch 0 \
+	--max_epoch $(nepoch)
