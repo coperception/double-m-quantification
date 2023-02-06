@@ -86,7 +86,6 @@ Double-M Qualification:
       title     = {Uncertainty Quantification of Collaborative Detection for Self-Driving},
       year={2023},
       booktitle={IEEE International Conference on Robotics and Automation (ICRA)}
-  }
 }
 ```
 
